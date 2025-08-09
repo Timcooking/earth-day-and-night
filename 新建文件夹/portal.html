@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MI5 - Overseas Intelligence Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+        
+        :root {
+            --main-bg-color: #0d1117;
+            --main-text-color: #00ff41;
+            --accent-color: #ff0041;
+            --border-color: #1a1e24;
+            --console-font: 'Source Code Pro', monospace;
+            --title-font: 'Orbitron', sans-serif;
+            --data-font: 'Roboto Mono', monospace;
+        }
+
+        body {
+            font-family: var(--data-font);
+            background-color: var(--main-bg-color);
+            color: var(--main-text-color);
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-family: var(--title-font);
+            font-size: 2em;
+            color: var(--accent-color);
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .user-info {
+            font-family: var(--console-font);
+            text-align: right;
+        }
+
+        .language-switcher {
+            margin-left: 20px;
+            cursor: pointer;
+            color: var(--main-text-color);
+            text-decoration: underline;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+            overflow: auto;
+        }
+
+        .query-section, .result-section {
+            background-color: #161b22;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1);
+            overflow-y: auto;
+        }
+
+        .query-section {
+            width: 300px;
+            min-width: 250px;
+        }
+
+        .result-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            font-family: var(--title-font);
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 0;
+            letter-spacing: 2px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        select, input[type="text"], button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            background-color: var(--main-bg-color);
+            border: 1px solid var(--main-text-color);
+            color: var(--main-text-color);
+            font-family: var(--console-font);
+            box-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+            outline: none;
+        }
+        
+        button {
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--main-text-color);
+            color: var(--main-bg-color);
+        }
+        
+        .result-panel {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #10141a;
+            overflow-y: auto;
+        }
+
+        .info-group {
+            margin-bottom: 20px;
+        }
+        
+        .info-group h3 {
+            font-family: var(--title-font);
+            color: var(--main-text-color);
+            border-bottom: 1px dashed var(--main-text-color);
+            padding-bottom: 5px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            background-color: #333;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
+            border: 1px solid var(--accent-color);
+            margin-bottom: 15px;
+            font-family: var(--data-font);
+        }
+        
+        .log-entry {
+            font-family: var(--console-font);
+            line-height: 1.5;
+            color: #72a4ff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .animated-text {
+            white-space: pre;
+            overflow: hidden;
+            border-right: .15em solid var(--main-text-color);
+            animation: typing 1s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        /* The typing effect */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--main-text-color); }
+        }
+
+        /* Added for Logout button */
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: var(--main-bg-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--title-font);
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+            outline: none;
+        }
+
+        .logout-button:hover {
+            background-color: #ff3366;
+        }
+
+        /* Added for Watermark */
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(0, 255, 65, 0.1);
+            font-size: 2em;
+            font-family: var(--title-font);
+            letter-spacing: 5px;
+            z-index: 999;
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">MI5-OSI</div>
+        <div class="user-info">
+            <span id="user-location">Overseas(Guangzhou)</span><br>
+            <span id="current-time"></span>
+            <span class="language-switcher" onclick="toggleLanguage()">[ 中/EN ]</span>
+        </div>
+    </div>
+    
+    <button class="logout-button" onclick="window.location.href='login.html'">Logout</button>
+    
+    <div class="main-container">
+        
+        <div class="query-section">
+            <h2 id="query-title">目标查询</h2>
+            <form id="search-form">
+                <label for="country-code" id="label-country-code">区号</label>
+                <select id="country-code">
+                    <option value="+86" selected>+86 (China)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+1">+1 (USA)</option>
+                    <option value="+852">+852 (Hong Kong)</option>
+                    <option value="+81">+81 (Japan)</option>
+                    <option value="+61">+61 (Australia)</option>
+                </select>
+
+                <label for="phone-number" id="label-phone-number">电话号码</label>
+                <input type="text" id="phone-number" placeholder="输入电话号码" required>
+
+                <button type="submit" id="search-button">执行查询</button>
+            </form>
+        </div>
+        
+        <div class="result-section">
+            <h2 id="results-title">查询结果</h2>
+            <div class="result-panel">
+                <div id="results-content">
+                    <div class="log-entry"> > 系统就绪...</div>
+                    <div class="log-entry"> > 等待指令...</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="watermark">MI5</div>
+
+<script>
+    const data = {
+        '+8613800138000': {
+            name: '王小明 (Wang Xiaoming)',
+            photo: '无法获取',
+            address: '广东省广州市天河区华夏路1号',
+            location: { lat: '23.1292', lon: '113.2644', accuracy: '高' },
+            status: '正常活动',
+            associated: [
+                { name: '李华 (Li Hua)', relationship: '商业伙伴' },
+                { name: '张伟 (Zhang Wei)', relationship: '家庭成员' }
+            ]
+        },
+        '+8613912345678': {
+            name: '周丽 (Zhou Li)',
+            photo: '无法获取',
+            address: '广东省深圳市南山区高新南九道',
+            location: { lat: '22.5401', lon: '113.9458', accuracy: '中' },
+            status: '近期出国，目标为英国伦敦',
+            associated: [
+                { name: 'John Smith', relationship: '海外联系人' }
+            ]
+        }
+    };
+
+    let isEnglish = false;
+    const lang = {
+        zh: {
+            title: '目标查询',
+            labelCountryCode: '区号',
+            labelPhoneNumber: '电话号码',
+            placeholder: '输入电话号码',
+            searchButton: '执行查询',
+            resultsTitle: '查询结果',
+            systemReady: '> 系统就绪...',
+            waiting: '> 等待指令...',
+            searching: '> 正在查询电话号码: ',
+            querySuccess: '> 查询成功。数据同步中...',
+            queryFail: '> 未找到该号码数据。',
+            profile: '档案信息',
+            name: '姓名',
+            photo: '照片',
+            photoNA: '无法获取',
+            address: '注册地址',
+            location: '最后已知位置',
+            coordinates: '坐标',
+            status: '状态',
+            associated: '关联人员',
+            relationship: '关系',
+            userLocation: 'Overseas(Guangzhou)'
+        },
+        en: {
+            title: 'Target Query',
+            labelCountryCode: 'Country Code',
+            labelPhoneNumber: 'Phone Number',
+            placeholder: 'Enter phone number',
+            searchButton: 'Execute Query',
+            resultsTitle: 'Query Results',
+            systemReady: '> System Ready...',
+            waiting: '> Awaiting Command...',
+            searching: '> Searching for phone number: ',
+            querySuccess: '> Query successful. Syncing data...',
+            queryFail: '> Data not found for this number.',
+            profile: 'Profile Information',
+            name: 'Name',
+            photo: 'Photo',
+            photoNA: 'Not Available',
+            address: 'Registered Address',
+            location: 'Last Known Location',
+            coordinates: 'Coordinates',
+            status: 'Status',
+            associated: 'Associated Personnel',
+            relationship: 'Relationship',
+            userLocation: 'Overseas(Guangzhou)'
+        }
+    };
+
+    function updateLanguage(langKey) {
+        document.getElementById('query-title').innerText = lang[langKey].title;
+        document.getElementById('label-country-code').innerText = lang[langKey].labelCountryCode;
+        document.getElementById('label-phone-number').innerText = lang[langKey].labelPhoneNumber;
+        document.getElementById('phone-number').placeholder = lang[langKey].placeholder;
+        document.getElementById('search-button').innerText = lang[langKey].searchButton;
+        document.getElementById('results-title').innerText = lang[langKey].resultsTitle;
+        document.getElementById('user-location').innerText = lang[langKey].userLocation;
+        
+        const resultsContent = document.getElementById('results-content');
+        if (resultsContent.children.length <= 2) {
+            resultsContent.innerHTML = `<div class="log-entry">${lang[langKey].systemReady}</div><div class="log-entry">${lang[langKey].waiting}</div>`;
+        }
+    }
+
+    function toggleLanguage() {
+        isEnglish = !isEnglish;
+        updateLanguage(isEnglish ? 'en' : 'zh');
+    }
+
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const countryCode = document.getElementById('country-code').value;
+        const phoneNumber = document.getElementById('phone-number').value.trim();
+        const fullNumber = countryCode + phoneNumber;
+        const resultsContent = document.getElementById('results-content');
+        const langKey = isEnglish ? 'en' : 'zh';
+
+        resultsContent.innerHTML = '';
+        const searchEntry = document.createElement('div');
+        searchEntry.className = 'log-entry animated-text';
+        searchEntry.innerText = lang[langKey].searching + fullNumber;
+        resultsContent.appendChild(searchEntry);
+
+        setTimeout(() => {
+            const resultData = data[fullNumber];
+            if (resultData) {
+                searchEntry.style.animation = 'none';
+                searchEntry.style.borderRight = 'none';
+                resultsContent.innerHTML += `<div class="log-entry">${lang[langKey].querySuccess}</div>`;
+                renderResults(resultData, langKey);
+            } else {
+                resultsContent.innerHTML += `<div class="log-entry">${lang[langKey].queryFail}</div>`;
+            }
+        }, 1500); // Simulate network delay
+    });
+
+    function renderResults(result, langKey) {
+        const resultsContent = document.getElementById('results-content');
+        const html = `
+            <div class="info-group">
+                <h3>${lang[langKey].profile}</h3>
+                <div class="profile-photo">${lang[langKey].photoNA}</div>
+                <p><strong>${lang[langKey].name}:</strong> ${result.name}</p>
+                <p><strong>${lang[langKey].address}:</strong> ${result.address}</p>
+            </div>
+            <div class="info-group">
+                <h3>${lang[langKey].location}</h3>
+                <p><strong>${lang[langKey].coordinates}:</strong> ${result.location.lat}, ${result.location.lon} (Accuracy: ${result.location.accuracy})</p>
+                <p><strong>${lang[langKey].status}:</strong> ${result.status}</p>
+            </div>
+            <div class="info-group">
+                <h3>${lang[langKey].associated}</h3>
+                ${result.associated.map(person => `<p><strong>${person.name}:</strong> ${person.relationship}</p>`).join('')}
+            </div>
+        `;
+        resultsContent.innerHTML += html;
+    }
+    
+    function updateTime() {
+        const now = new Date();
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('current-time').innerText = now.toLocaleString('en-US', options);
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>
+
+</body>
+</html>

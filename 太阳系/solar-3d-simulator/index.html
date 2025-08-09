@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>太阳系 3D 模拟器</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <!-- Import Map: 将 bare specifier "three" 与其 addons 映射到 CDN，确保浏览器可直接加载模块 -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.153.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- 顶部控制条：时间控制、速度、轨道/效果开关、时间滑杆 -->
+  <header id="topbar" role="toolbar" aria-label="时间控制工具栏">
+    <div class="controls">
+      <button id="playPauseBtn" aria-label="播放或暂停 (空格)">▶︎</button>
+      <button id="slowerBtn" aria-label="减速 ÷2 (↓)">÷2</button>
+      <button id="fasterBtn" aria-label="加速 ×2 (↑)">×2</button>
+      <button id="stepBackBtn" aria-label="单步后退 (←)">⟲</button>
+      <button id="stepForwardBtn" aria-label="单步前进 (→)">⟳</button>
+      <span id="speedDisplay" aria-live="polite">速度 1×</span>
+    </div>
+    <div class="toggles">
+      <label><input type="checkbox" id="orbitsToggle" checked /> 显示轨道</label>
+  <label><input type="checkbox" id="bloomToggle" /> Bloom</label>
+  <label><input type="checkbox" id="cinematicToggle" /> 电影模式</label>
+    </div>
+    <div class="timeline">
+      <input type="range" id="timeSlider" min="0" max="1" step="0.0001" aria-label="时间进度滑杆（基于地球年）" />
+      <span id="timeLabel" title="以地球年为基准的进度">0.0%</span>
+    </div>
+  </header>
+
+  <!-- WebGL 容器 -->
+  <main id="app" aria-label="太阳系三维视图">
+    <!-- Three.js 的 canvas 将插入到此容器 -->
+    <div id="webgl"></div>
+  </main>
+
+  <!-- 信息面板：点击行星弹出 -->
+  <aside id="infoPanel" aria-live="polite" aria-label="行星信息卡" class="hidden">
+    <button id="infoCloseBtn" class="close" aria-label="关闭信息卡">×</button>
+    <img id="infoImage" alt="行星图片占位" />
+    <h2 id="infoTitle">行星名</h2>
+    <div id="infoMeta">
+      <p><strong>半径：</strong><span id="infoRadius">-</span> km</p>
+      <p><strong>轨道半长轴：</strong><span id="infoDistance">-</span> km</p>
+      <p><strong>公转周期：</strong><span id="infoPeriod">-</span> 天</p>
+    </div>
+    <p id="infoText"></p>
+    <p><a id="infoLink" href="#" target="_blank" rel="noopener">更多资料</a></p>
+  </aside>
+
+  <footer id="footnote">
+    操作提示：拖拽旋转，滚轮缩放；空格播放/暂停，方向键调速/步进。
+  </footer>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
